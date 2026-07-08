@@ -48,6 +48,9 @@ dependencies {
     // By wrapping a dependency descriptor in rfg.deobf() method call, the dependency is queued for deobfuscation
     // When deobfuscating, RFG respects the mapping_channel + mapping_version stated in gradle.properties
 
+    implementation rfg.deobf("curse.maven:immersive-engineering-231951:2974106")
+    runtimeOnly  rfg.deobf("curse.maven:jei-238222:5846804")
+
     // Example - Shading dependencies:
     // Using the shadow plugin, by using the "shade" configuration, the dependency will be shaded into your output jar
     // shade 'mezz:jei:4.31.2' << will shade HadEnoughItems 4.31.2 directly into your jar
