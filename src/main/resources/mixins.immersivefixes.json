@@ -1,14 +1,17 @@
 {
-	"package": "com.melodiccougar7.immersivefixes.mixin",
-	"required": true,
-	"refmap": "mixins.immersivefixes.refmap.json",
-	"target": "@env(DEFAULT)",
-	"minVersion": "0.8.5",
-	"compatibilityLevel": "JAVA_8",
-	"mixins": [
-		"WorkbenchFixes"
-	],
-	"server": [],
-	"client": [],
-	"verbose": true
+  "package": "com.melodiccougar7.immersivefixes.mixin",
+  "required": true,
+  "refmap": "mixins.immersivefixes.refmap.json",
+  "target": "@env(DEFAULT)",
+  "minVersion": "0.8.5",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "BlockFakeLight",
+    "TileEntityFloodlightMixin",
+    "ClientUtilsMixin",
+    "InventoryBlueprintMixin"
+  ],
+  "server": [],
+  "client": [],
+  "verbose": true
 }
