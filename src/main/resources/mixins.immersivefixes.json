@@ -9,7 +9,8 @@
     "BlockFakeLight",
     "TileEntityFloodlightMixin",
     "ClientUtilsMixin",
-    "InventoryBlueprintMixin"
+    "InventoryBlueprintMixin",
+    "EventHandlerMixin"
   ],
   "server": [],
   "client": [],
