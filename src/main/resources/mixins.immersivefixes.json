@@ -10,7 +10,8 @@
     "TileEntityFloodlightMixin",
     "ClientUtilsMixin",
     "InventoryBlueprintMixin",
-    "EventHandlerMixin"
+    "EventHandlerMixin",
+    "BlockMetalDecoration2Mixin"
   ],
   "server": [],
   "client": [],
