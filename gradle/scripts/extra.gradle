@@ -24,3 +24,32 @@ artifacts {
 tasks.named('reobfJar').configure { mustRunAfter tasks.named('devJar') }
 
 assemble.dependsOn devJar
+
+tasks.register('bumpVersion') {
+    def inputHandler = project.services.get(org.gradle.api.internal.tasks.userinput.UserInputHandler)
+    def propertiesFile = file('gradle.properties')
+    def currentVersion = propertyString('mod_version')
+    def release = releaseVersion
+    doLast {
+        def choice = inputHandler.askUser { it.choice("Release type for ${currentVersion}", ['patch', 'fix']).whenNotConnected(null).ask() }.getOrNull()
+        if (choice == null) { throw new GradleException('Choosing patch or fix needs an interactive console; run the build from a terminal') }
+        def (major, minor, patch) = currentVersion.tokenize('.')*.toInteger()
+        def next = choice == 'fix' ? "${major}.${minor + 1}.0" : "${major}.${minor}.${patch + 1}"
+        propertiesFile.text = propertiesFile.text.replaceFirst(/(?m)^mod_version\s*=.*$/, "mod_version = ${next}")
+        release.set(next)
+        logger.lifecycle("Version ${currentVersion} -> ${next} (${choice})")
+    }
+}
+
+assemble.dependsOn 'bumpVersion'
+
+tasks.withType(Jar).configureEach {
+    mustRunAfter 'bumpVersion'
+    archiveVersion.set(releaseVersion)
+}
+
+tasks.named('processResources').configure { mustRunAfter 'bumpVersion' }
+
+tasks.named('injectTags').configure { mustRunAfter 'bumpVersion' }
+
+minecraft { injectedTags.put('VERSION', releaseVersion) }
