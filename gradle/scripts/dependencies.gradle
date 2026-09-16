@@ -31,6 +31,10 @@ repositories {
 configurations {
     shade
     implementation.extendsFrom shade
+    clientRuntime {
+        canBeConsumed = false
+        canBeResolved = true
+    }
 }
 
 dependencies {
@@ -50,6 +54,8 @@ dependencies {
 
     implementation rfg.deobf("curse.maven:immersive-engineering-231951:2974106")
     runtimeOnly  rfg.deobf("curse.maven:jei-238222:5846804")
+
+    clientRuntime rfg.deobf("curse.maven:better-f3-reborn-1414418:7490296")
 
     // Example - Shading dependencies:
     // Using the shadow plugin, by using the "shade" configuration, the dependency will be shaded into your output jar
@@ -78,6 +84,10 @@ dependencies {
     // implementation ('com.google.code.gson:gson:2.8.6') {
     //     transitive = false
     // }
+}
+
+tasks.named('runClient').configure {
+    classpath configurations.clientRuntime
 }
 
 // Need reobfJar to use uber jars, so dependencies that are shaded in are present

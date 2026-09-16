@@ -23,6 +23,10 @@ import org.spongepowered.asm.mixin.Overwrite;
 @Mixin(value = EventHandler.class, remap = false)
 public class EventHandlerMixin
 {
+	/**
+	 * @author Pabilo8
+	 * @reason Razor wire accepts any wire cutter through Utils.isWirecutter, not only IE's own tool item
+	 */
 	@Overwrite
 	@SubscribeEvent
 	public void digSpeedEvent(BreakSpeed event)
