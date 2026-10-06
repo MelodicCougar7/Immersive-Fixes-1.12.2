@@ -22,7 +22,8 @@
   "client": [
     "ClientEventHandlerSoundMixin",
     "IETileSoundMixin",
-    "SoundManagerMixin"
+    "SoundManagerMixin",
+    "TileRenderBottlingMachineMixin"
   ],
   "verbose": true
 }
