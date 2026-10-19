@@ -1,5 +1,6 @@
 package com.melodiccougar7.immersivefixes.mixin;
 
+import com.melodiccougar7.immersivefixes.helper.ChunkDirty;
 import com.melodiccougar7.immersivefixes.helper.FakeLightRemovalQueue;
 
 import blusunrize.immersiveengineering.common.Config.IEConfig;
@@ -19,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyConstant;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = TileEntityFloodlight.class, remap = false)
 public abstract class TileEntityFloodlightMixin extends TileEntity implements ISpawnInterdiction {
@@ -42,4 +44,10 @@ public abstract class TileEntityFloodlightMixin extends TileEntity implements IS
     private void registerSpawnInterdiction(CallbackInfo ci) {
         if(IEConfig.Machines.floodlight_spawnPrevent) { synchronized(EventHandler.interdictionTiles) { if(!EventHandler.interdictionTiles.contains(this)) { EventHandler.interdictionTiles.add(this); } } }
     }
+
+    @Inject(method = "update()V", at = @At(value = "FIELD", target = "Lblusunrize/immersiveengineering/common/blocks/metal/TileEntityFloodlight;energyStorage:I", opcode = Opcodes.PUTFIELD, remap = false), remap = true, require = 1)
+    private void dirtyOnDraw(CallbackInfo ci) { ChunkDirty.mark(this); }
+
+    @Inject(method = "outputEnergy(IZI)I", at = @At(value = "FIELD", target = "Lblusunrize/immersiveengineering/common/blocks/metal/TileEntityFloodlight;energyStorage:I", opcode = Opcodes.PUTFIELD), require = 1)
+    private void dirtyOnReceive(CallbackInfoReturnable<Integer> cir) { ChunkDirty.mark(this); }
 }
