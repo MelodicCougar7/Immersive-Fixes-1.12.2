@@ -38,6 +38,7 @@ minecraft {
     injectedTags.put('MOD_ID', mod_id)
     injectedTags.put('MOD_NAME', mod_name)
     extraRunJvmArguments.addAll(
+            '-Xmx4G',
             '-Dforge.logging.console.level=debug',
             '-XX:+FlightRecorder',
             '-XX:StartFlightRecording=maxsize=512M,dumponexit=true,filename=logs/profile.jfr,settings=profile'
@@ -145,3 +146,14 @@ tasks.withType(Jar).configureEach {
 tasks.named('processResources').configure { mustRunAfter 'bumpVersion' }
 
 tasks.named('injectTags').configure { mustRunAfter 'bumpVersion' }
+
+def devSyncScript = null
+for (def dir = rootDir; dir != null && devSyncScript == null; dir = dir.parentFile) {
+    def candidate = new File(dir, '#scripts/mods-devsync.gradle')
+    if (candidate.isFile()) { devSyncScript = candidate }
+}
+if (devSyncScript != null) {
+    ext.devSyncVersion = releaseVersion
+    apply from: devSyncScript
+    build.finalizedBy 'devSync'
+}

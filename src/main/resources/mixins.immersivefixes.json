@@ -5,6 +5,9 @@
   "target": "@env(DEFAULT)",
   "minVersion": "0.8.5",
   "compatibilityLevel": "JAVA_8",
+  "injectors": {
+    "defaultRequire": 1
+  },
   "mixins": [
     "BlockFakeLight",
     "TileEntityFloodlightMixin",
@@ -16,7 +19,19 @@
     "TileEntityCapacitorLVMixin",
     "ImmersiveNetHandlerMixin",
     "ConnectionMixin",
-    "TileEntityConnectorLVMixin"
+    "TileEntityConnectorLVMixin",
+    "TileEntityIEBaseMixin",
+    "FluxStorageExtractDirtyMixin",
+    "FluxStorageAdvancedExtractDirtyMixin",
+    "FluidTankDrainDirtyMixin",
+    "InsertStackDirtyMixin",
+    "StoneFurnaceDirtyMixin",
+    "TileEntityBelljarMixin",
+    "TileEntityLightningrodMixin",
+    "TileEntityBlastFurnacePreheaterMixin",
+    "TileEntityFluidPumpMixin",
+    "TileEntityBottlingMachineMixin",
+    "TileEntityElectricLanternMixin"
   ],
   "server": [],
   "client": [
