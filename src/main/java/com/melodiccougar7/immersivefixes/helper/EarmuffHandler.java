@@ -54,7 +54,7 @@ import java.util.Set;
 
     public static float apply(float volume, ISound sound) {
         if (volume <= 0 || sound == null) { return volume; }
-        float multiplier = MULTIPLIERS.get(sound.getCategory());
+        float multiplier = MULTIPLIERS.getOrDefault(sound.getCategory(), 1f);
         if (multiplier >= 1 || blacklist.contains(sound.getSoundLocation().toString().toLowerCase(Locale.ROOT))) { return volume; }
         return Math.max(volume * multiplier, MIN_VOLUME);
     }
