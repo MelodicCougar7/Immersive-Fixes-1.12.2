@@ -149,16 +149,20 @@ public abstract class TileEntityConnectorLVMixin extends TileEntityImmersiveConn
         Map<Connection, Integer> rates = ImmersiveNetHandler.INSTANCE.getTransferedRates(world.provider.getDimension());
         Set<IImmersiveConnectable> passed = new HashSet<>();
         float intermediaryLoss = 0;
+        BlockPos lastEndPos = null;
+        IImmersiveConnectable lastEnd = null;
         for(Connection sub : con.subConnections) {
             float length = sub.length/(float)sub.cableType.getMaxLength();
             float baseLoss = (float)sub.cableType.getLossRatio();
             float mod = (((maxInput-tempR)/(float)maxInput)/.25f)*.1f;
             intermediaryLoss = MathHelper.clamp(intermediaryLoss+length*(baseLoss+baseLoss*mod), 0, 1);
             rates.merge(sub, r, Integer::sum);
-            IImmersiveConnectable subStart = ConnectorResolveMemo.resolve(sub.start, world);
+            IImmersiveConnectable subStart = sub.start.equals(lastEndPos)?lastEnd: ConnectorResolveMemo.resolve(sub.start, world);
             IImmersiveConnectable subEnd = ConnectorResolveMemo.resolve(sub.end, world);
             if(subStart!=null&&passed.add(subStart)) { subStart.onEnergyPassthrough(r-r*intermediaryLoss); }
             if(subEnd!=null&&passed.add(subEnd)) { subEnd.onEnergyPassthrough(r-r*intermediaryLoss); }
+            lastEndPos = sub.end;
+            lastEnd = subEnd;
         }
     }
 

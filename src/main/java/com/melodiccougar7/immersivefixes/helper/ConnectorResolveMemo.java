@@ -3,10 +3,10 @@ package com.melodiccougar7.immersivefixes.helper;
 import blusunrize.immersiveengineering.api.ApiUtils;
 import blusunrize.immersiveengineering.api.energy.wires.IImmersiveConnectable;
 import blusunrize.immersiveengineering.common.util.Utils;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import java.util.HashMap;
-import java.util.Map;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -19,7 +19,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 @Mod.EventBusSubscriber public final class ConnectorResolveMemo {
 
-    private static final Map<Integer, Long2ObjectMap<Memo>> MEMOS = new HashMap<>();
+    private static final Int2ObjectMap<Long2ObjectMap<Memo>> MEMOS = new Int2ObjectOpenHashMap<>();
 
     private ConnectorResolveMemo() {}
 
@@ -43,10 +43,11 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
         Long2ObjectMap<Memo> chunks = MEMOS.get(world.provider.getDimension());
         Memo memo = chunks==null?null: chunks.get(ChunkPos.asLong(pos.getX() >> 4, pos.getZ() >> 4));
         if(memo==null) { return null; }
-        TileEntity hit = memo.tiles.get(pos);
+        long key = pos.toLong();
+        TileEntity hit = memo.tiles.get(key);
         if(hit==null) { return null; }
         if(hit.isInvalid()) {
-            memo.tiles.remove(pos);
+            memo.tiles.remove(key);
             return null;
         }
         memo.chunk.unloadQueued = false;
@@ -54,14 +55,19 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
     }
 
     private static void remember(BlockPos pos, World world, TileEntity tile) {
-        Long2ObjectMap<Memo> chunks = MEMOS.computeIfAbsent(world.provider.getDimension(), dimension -> new Long2ObjectOpenHashMap<>());
+        int dimension = world.provider.getDimension();
+        Long2ObjectMap<Memo> chunks = MEMOS.get(dimension);
+        if(chunks==null) {
+            chunks = new Long2ObjectOpenHashMap<>();
+            MEMOS.put(dimension, chunks);
+        }
         long key = ChunkPos.asLong(pos.getX() >> 4, pos.getZ() >> 4);
         Memo memo = chunks.get(key);
         if(memo==null) {
             memo = new Memo(world.getChunk(pos));
             chunks.put(key, memo);
         }
-        memo.tiles.put(pos.toImmutable(), tile);
+        memo.tiles.put(pos.toLong(), tile);
     }
 
     @SubscribeEvent public static void onChunkUnload(ChunkEvent.Unload event) {
@@ -77,7 +83,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
     private static final class Memo {
         private final Chunk chunk;
-        private final Map<BlockPos, TileEntity> tiles = new HashMap<>();
+        private final Long2ObjectMap<TileEntity> tiles = new Long2ObjectOpenHashMap<>();
 
         private Memo(Chunk chunk) { this.chunk = chunk; }
     }
