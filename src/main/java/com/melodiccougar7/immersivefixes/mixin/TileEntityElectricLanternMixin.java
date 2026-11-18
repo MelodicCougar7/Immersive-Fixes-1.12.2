@@ -8,6 +8,7 @@ import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -19,4 +20,7 @@ public abstract class TileEntityElectricLanternMixin extends TileEntityIEBase {
 
     @Inject(method = "outputEnergy(IZI)I", at = @At(value = "FIELD", target = "Lblusunrize/immersiveengineering/common/blocks/metal/TileEntityElectricLantern;energyStorage:I", opcode = Opcodes.PUTFIELD), require = 1)
     private void dirtyOnReceive(CallbackInfoReturnable<Integer> cir) { ChunkDirty.mark(this); }
+
+    @Redirect(method = "outputEnergy(IZI)I", at = @At(value = "INVOKE", target = "Ljava/lang/Math;min(II)I"), require = 2)
+    private int capReceiveAtOffer(int room, int draw, int amount) { return Math.min(Math.min(room, draw), amount); }
 }

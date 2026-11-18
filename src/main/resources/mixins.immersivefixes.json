@@ -31,14 +31,34 @@
     "TileEntityBlastFurnacePreheaterMixin",
     "TileEntityFluidPumpMixin",
     "TileEntityBottlingMachineMixin",
-    "TileEntityElectricLanternMixin"
+    "TileEntityElectricLanternMixin",
+    "TileEntityBreakerSwitchMixin",
+    "TileEntityFeedthroughMixin",
+    "ApiUtilsMixin",
+    "TileEntityImmersiveConnectableMixin",
+    "TileEntityTransformerMixin",
+    "TileEntityRedstoneBreakerMixin",
+    "TileEntityConnectorRedstoneMixin",
+    "RedstoneWireNetworkMixin",
+    "TileEntityConnectorProbeMixin",
+    "TileEntityEnergyMeterMixin",
+    "BlockConnectorMixin",
+    "IESaveDataMixin"
   ],
   "server": [],
   "client": [
     "ClientEventHandlerSoundMixin",
     "IETileSoundMixin",
     "SoundManagerMixin",
-    "TileRenderBottlingMachineMixin"
+    "TileRenderBottlingMachineMixin",
+    "FeedthroughModelMixin",
+    "SmartLightingQuadMixin",
+    "ConnModelRealMixin",
+    "UtilsMixin",
+    "ClientProxyMixin",
+    "FeedthroughModelCacheMixin",
+    "FeedthroughItemOverrideMixin",
+    "TileEntityConnectorLVClientMixin"
   ],
   "verbose": true
 }
